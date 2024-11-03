@@ -23,10 +23,14 @@ export class DetailsComponent {
     lastName: new FormControl(''),
     email: new FormControl(''),
   });
-  
+
   constructor() {
     this.housingLocationId = Number(this.route.snapshot.params['id'])
-    this.housingLocation = this.housingService.getHousingLocationById(this.housingLocationId);
+    // Switch from local data to async service call
+    //this.housingLocation = this.housingService.getHousingLocationById(this.housingLocationId);
+    this.housingService.getHousingLocationById(this.housingLocationId).then((housingLocation) => {
+      this.housingLocation = housingLocation;
+    });
   }
 
   submitApplication() {

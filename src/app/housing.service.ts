@@ -5,6 +5,8 @@ import { HousingLocation } from './housing-location';
   providedIn: 'root'
 })
 export class HousingService {
+  readonly jsonServerUrl = 'http://localhost:3000/locations';
+  
   readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
   
   housingLocationList: HousingLocation[] = [{
@@ -97,19 +99,31 @@ export class HousingService {
     availableUnits: 6,
     wifi: true,
     laundry: true,
-  },];
+  },]; 
 
-  getAllHousingLocations(): HousingLocation[] {
-    return this.housingLocationList;
-  }
+  // Switch from local data to async service call
+  // getAllHousingLocations(): HousingLocation[] {
+  //   return this.housingLocationList;
+  // }
 
-  getHousingLocationById(id: number): HousingLocation | undefined {
-    return this.housingLocationList.find((housingLocation) => housingLocation.id === id);
-  }
+  // Switch from local data to async service call
+  // getHousingLocationById(id: number): HousingLocation | undefined {
+  //   return this.housingLocationList.find((housingLocation) => housingLocation.id === id);
+  // }
 
   submitApplication(firstName: string, lastName: string, email: string) {
     console.log(
       `Homes application received: firstName ${firstName}, lastName: ${lastName}, email: ${email}.`,
     );    
+  }
+
+  async getAllHousingLocations(): Promise<HousingLocation[]> {
+    const data = await fetch(this.jsonServerUrl);
+    return (await data.json()) ?? [];
+  }
+
+  async getHousingLocationById(id: number): Promise<HousingLocation | undefined> {
+    const data = await fetch(`${this.jsonServerUrl}/${id}`);
+    return (await data.json()) ?? {};
   }
 }
